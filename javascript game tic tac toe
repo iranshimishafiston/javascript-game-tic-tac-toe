@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="tic.css">
+</head>
+<style>
+    h1{
+        color: red;
+    }
+    strong{
+        color: rgb(28, 165, 165);
+    }
+    .cell{
+    width: 75px;
+    height: 50px;
+    border: 2px solid;
+    margin: auto;
+    font-size: 41px;
+    margin-bottom: 7px;
+    margin-right: 5px;
+    border-radius: 7px;
+    background-color: whitesmoke;
+    border-color: rgb(121, 106, 106);
+}
+
+#containerCell{
+    display: grid;
+    grid-template-columns: repeat(3,auto);
+    width: 200px;
+}
+button{
+    width: 100px;
+    height: 30px;
+    background-color: rgb(68, 68, 228);
+    border-color: rgb(68, 68, 228);
+    border-radius: 3px;
+}
+h2{
+    color: rgb(109, 109, 224);
+    font-family: cursive;
+}
+
+</style>
+<body>
+    <center>
+     <div class="container">
+        <h1>Tic Tac Toe</h1>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong>game start by just tap on boxbr<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fisrt player starts as player X<br>
+                         and<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;second player as player 0 <br><br>
+            </strong>
+        <div id="containerCell">
+            <div cellIndex="0" class="cell"></div>
+            <div cellIndex="1" class="cell"></div>
+            <div cellIndex="2" class="cell"></div>
+            <div cellIndex="3" class="cell"></div>
+            <div cellIndex="4" class="cell"></div>
+            <div cellIndex="5" class="cell"></div>
+            <div cellIndex="6" class="cell"></div>
+            <div cellIndex="7" class="cell"></div>
+            <div cellIndex="8" class="cell"></div>
+        </div><br>
+        <button id="restartBtn">Reset</button><br>
+        <h2 id="statusText"></h2>
+    </center>
+     </div> 
+</body>
+<script>
+const cells=document.querySelectorAll(".cell");
+const statusText=document.querySelector("#statusText");
+const restartBtn=document.querySelector("#restartBtn");
+
+const winConditions=[
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
+let options=["","","","","","","","","",];
+let currentPlayer="X";
+let running=false;
+
+initializer();
+
+function initializer(){
+cells.forEach(cell=>cell.addEventListener("click",clickCell));
+restartBtn.addEventListener("click",restartGame);
+statusText.textContent=`${currentPlayer}'s turn`;
+running=true;
+}
+function clickCell(){
+    const cellIndex= this.getAttribute("cellIndex");
+    if(options[cellIndex] != "" || !running){
+        return;
+    }
+updateCell(this,cellIndex);
+
+checkWinner();
+} 
+
+function updateCell(cell,index){
+    options[index]=currentPlayer;
+    cell.textContent=currentPlayer;
+ }
+function changePlayer(){
+currentPlayer=(currentPlayer == "X") ? "0" :"X";
+statusText.textContent`${currentPlayer}'s turn`;
+}
+
+
+function checkWinner(){
+    let win=false;
+    for(let i=0;i<winConditions.length;i++){
+        const condition=winConditions[i];
+        const cellA=options[condition[0]];
+        const cellB=options[condition[1]];
+        const cellC=options[condition[2]];
+        if (cellA=="" || cellB=="" || cellC==""){
+            continue;
+        }
+        if(cellA==cellB && cellB==cellC){
+            win=true;
+            break;
+        }
+    }
+if(win){
+    statusText.textContent=`player ${currentPlayer} won`;
+    running=false;
+}
+else if(!options.includes("")){
+    statusText.textContent='player x and 0 DRAW';
+    running=false;
+}
+else{
+    changePlayer();
+}
+}
+
+function restartGame(){
+    currentPlayer="x";
+    let options=["","","","","","","","","",];
+    statusText.textContent=`${currentPlayer}'s turn`;
+    cells.forEach(cell=>cell.textContent="");
+    running=true;
+}
+</script>
+</html>
